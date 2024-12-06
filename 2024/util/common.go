@@ -16,6 +16,10 @@ func WelcomeMessage(day string) {
 
 
 func ReadData(path string) []string {
+    if !strings.HasSuffix(path, "data.txt") {
+        path += "/data.txt"
+    }
+
     file, err := os.Open(path)
     if err != nil {
         log.Fatalf("unable to open file: %v", err)
@@ -47,3 +51,14 @@ func ExtractIntArray(data []string) [][]int {
 
     return result
 }
+
+func Contains(arr []int, num int) bool {
+    for _, n := range arr {
+        if n == num {
+            return true 
+        }
+    }
+
+    return false
+}
+
