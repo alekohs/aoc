@@ -41,9 +41,10 @@ func part2(data []string) int {
         }
 
         for i := 0; i < len(arr); i++ {
-            arr2 := slices.Delete(arr, i, i + 1)
-            fmt.Println(" ", arr2, isValid(arr2))
-            if !isValid(arr2) {
+            tmpArr := make([]int, len(arr))
+            copy(tmpArr[:], arr[:])
+            arr3 := slices.Delete(tmpArr, i, i + 1)
+            if !isValid(arr3) {
                 continue
             }
 
