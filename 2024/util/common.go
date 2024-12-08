@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+    "regexp"
 )
 
 
@@ -62,3 +63,28 @@ func Contains(arr []int, num int) bool {
     return false
 }
 
+
+func GetMatches(exp string, str string) []string {
+	re, err := regexp.Compile(exp)
+	if err != nil {
+		fmt.Println("Error compiling regex:", err)
+        panic(err)
+	}
+
+    matches := re.FindAllString(str, -1)
+    if len(matches) > 0 {
+        return matches
+    }
+
+    return []string {}
+}
+
+func ReplaceAll(exp string, str string, repl string) string {
+	re, err := regexp.Compile(exp)
+	if err != nil {
+		fmt.Println("Error compiling regex:", err)
+        panic(err)
+	}
+
+    return re.ReplaceAllString(str, repl)
+}
