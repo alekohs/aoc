@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	// "strings"
@@ -44,7 +45,7 @@ func part1(rows []string) int {
 		// fmt.Println(row, indices)
 		for _, c := range indices {
 			for _, dir := range directions {
-				w1 := []string { "X" }
+				w1 := []string{"X"}
 				cr := r
 				cc := c
 
@@ -52,15 +53,14 @@ func part1(rows []string) int {
 
 				for j := 1; j < 4; j++ {
 					v, rc, err := getValue(grid, cr, cc, dir)
-
 					if err != nil {
-                        continue
+						continue
 					}
 
 					w1 = append(w1, v)
-                    cr = rc[0]
+					cr = rc[0]
 					cc = rc[1]
-                    validRows = append(validRows, []int{cr, cc})
+					validRows = append(validRows, []int{cr, cc})
 				}
 
 				if strings.Join(w1, "") == strings.Join(word, "") {
@@ -74,8 +74,47 @@ func part1(rows []string) int {
 	return sum
 }
 
-func part2(lists []string) int {
+func part2(rows []string) int {
+	var filtered []string
+
+	for _, row := range rows {
+		re := regexp.MustCompile("[^MAS]")
+		replaced := re.ReplaceAllString(row, ".")
+		filtered = append(filtered, replaced)
+	}
+
+	grid := make([][]string, len(filtered))
+	combos := [][][]string{
+		{
+			{"M", ".", "S"},
+			{".", "A", "."},
+			{"M", ".", "S"},
+		},
+		{
+			{"S", ".", "M"},
+			{".", "A", "."},
+			{"S", ".", "M"},
+		},
+	}
+
 	sum := 0
+
+	for i, row := range filtered {
+		grid[i] = splitOnChar(row)
+	}
+
+	r := len(grid)
+	c := len(grid[0])
+
+	for i := 0; i < r-1; i++ {
+		for j := 0; j < c-1; j++ {
+			for _, combo := range combos {
+				if isX(grid, i, j, combo) {
+					sum++
+				}
+			}
+		}
+	}
 
 	return sum
 }
@@ -136,16 +175,34 @@ func getValue(grid [][]string, r int, c int, dir Direction) (string, []int, erro
 
 	// Index of out bounds
 	if r < 0 || r > maxRow {
-        message := fmt.Sprintf("row out of bounds %d > %d", r, maxRow)
-		return "", []int{ r, c }, errors.New(message)
+		message := fmt.Sprintf("row out of bounds %d > %d", r, maxRow)
+		return "", []int{r, c}, errors.New(message)
 	}
 
-    if c < 0 || c > maxColumn  {
-        message := fmt.Sprintf("column out of bounds %d > %d", c, maxColumn)
-		return "", []int{ r, c }, errors.New(message)
-    }
+	if c < 0 || c > maxColumn {
+		message := fmt.Sprintf("column out of bounds %d > %d", c, maxColumn)
+		return "", []int{r, c}, errors.New(message)
+	}
 
 	return grid[r][c], []int{r, c}, nil
+}
+
+func isX(grid [][]string, r int, c int, combo [][]string) bool {
+	for di := 0; di < 3; di++ {
+		for dj := 0; dj < 3; dj++ {
+			if combo[di][dj] != "." {
+				// Check the corresponding grid cell
+				dr := r + di - 1
+				dc := c + dj - 1
+				val := combo[di][dj]
+
+				if dr < 0  || dc < 0 || grid[dr][dc] != val {
+					return false
+				}
+			}
+		}
+	}
+	return true
 }
 
 type Direction int

@@ -18,15 +18,13 @@ func TestPart1(t *testing.T) {
 
 
 func TestPart2(t *testing.T) {
-	rows := []string{
-        "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))",
-	}
+	data := util.ReadData("test-data.txt")
 
-	expected := 48
-	result := part2(rows)
+	expected := 9
+	result := part2(data)
 
-    if result != expected {
-		t.Fatalf("part2() = %v, expected %v", result, expected)
+	if result != expected {
+		t.Fatalf("part2() = %v, want %v", result, expected)
 	}
 
 }
