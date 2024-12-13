@@ -31,7 +31,16 @@ func ReadData(path string) []string {
         log.Fatalf("unable to read file: %v", err)
     }
 
-    return strings.Split(string(data), "\n")
+    result := []string {}
+    for _, r:= range strings.Split(string(data), "\n") {
+        if len(r) <= 0 {
+            continue
+        }
+
+        result = append(result, r)
+    }
+
+    return result
 }
 
 

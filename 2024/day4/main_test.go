@@ -2,24 +2,14 @@ package main
 
 import (
 	"testing"
-    "strings"
+	"github.com/alexanderkohkoinen/aoc/util"
 )
 
 func TestPart1(t *testing.T) {
-    content := `MMMSXXMASM
-    MSAMXMSMSA
-    AMXSXMAAMM
-    MSAMASMSMX
-    XMASAMXAMM
-    XXAMMXXAMA
-    SMSMSASXSS
-    SAXAMASAAA
-    MAMMMXMMMM
-    MXMXAXMASX`
+	data := util.ReadData("test-data.txt")
 
-    rows := strings.Split(content, "\n")
 	expected := 18
-	result := part1(rows)
+	result := part1(data)
 
 	if result != expected {
 		t.Fatalf("part1() = %v, want %v", result, expected)

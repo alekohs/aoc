@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -9,34 +10,66 @@ import (
 )
 
 func main() {
-	util.WelcomeMessage("Day 2")
+	util.WelcomeMessage("Day 4")
 	data := util.ReadData("data.txt")
 
 	fmt.Println("Part 1 ->  sum: ", part1(data))
 	fmt.Println("Part 2 ->  sum: ", part2(data))
 }
 
-func part1(lists []string) int {
+func part1(rows []string) int {
+	grid := make([][]string, len(rows))
+	word := []string{"X", "M", "A", "S"}
 	sum := 0
-	md := make([][]string, len(lists))
 
-	for i, list := range lists {
-		md[i] = splitOnChar(list)
+	for i, row := range rows {
+		grid[i] = splitOnChar(row)
 	}
 
-	for i, row := range md {
-		first := false
-		last := false
+	directions := []Direction{
+		East,
+		West,
+		North,
+		South,
+		SouthEast,
+		SouthWest,
+		NorthEast,
+		NorthWest,
+	}
 
-		if i == 0 { first := true }
-        if i == len(md[i]) { last := true }
+	// Loop grid
+	for r, row := range grid {
+		indices := findOccurences(row, word[0])
 
-		for j := 0; j < len(row); j++ {
-			fmt.Println("", j, i)
+		// fmt.Println(row, indices)
+		for _, c := range indices {
+			for _, dir := range directions {
+				w1 := []string { "X" }
+				cr := r
+				cc := c
+
+				validRows := [][]int{{cr, cc}}
+
+				for j := 1; j < 4; j++ {
+					v, rc, err := getValue(grid, cr, cc, dir)
+
+					if err != nil {
+                        continue
+					}
+
+					w1 = append(w1, v)
+                    cr = rc[0]
+					cc = rc[1]
+                    validRows = append(validRows, []int{cr, cc})
+				}
+
+				if strings.Join(w1, "") == strings.Join(word, "") {
+					// fmt.Println(validRows)
+					sum += 1
+				}
+			}
 		}
 	}
-
-	fmt.Println(md)
 
 	return sum
 }
@@ -59,3 +92,71 @@ func splitOnChar(str string) []string {
 	return result
 }
 
+func findOccurences(arr []string, letter string) []int {
+	var indices []int
+	for i, v := range arr {
+		if v == letter {
+			indices = append(indices, i)
+		}
+	}
+	return indices
+}
+
+func getValue(grid [][]string, r int, c int, dir Direction) (string, []int, error) {
+	maxRow := len(grid) - 1
+	maxColumn := len(grid[0]) - 1
+
+	switch dir {
+	case North:
+		r -= 1
+		c += 0
+	case NorthEast:
+		r -= 1
+		c += 1
+	case NorthWest:
+		r -= 1
+		c -= 1
+	case East:
+		r += 0
+		c += 1
+	case South:
+		r += 1
+		c += 0
+	case SouthEast:
+		r += 1
+		c += 1
+	case SouthWest:
+		r += 1
+		c -= 1
+	case West:
+		r += 0
+		c += -1
+
+	}
+
+	// Index of out bounds
+	if r < 0 || r > maxRow {
+        message := fmt.Sprintf("row out of bounds %d > %d", r, maxRow)
+		return "", []int{ r, c }, errors.New(message)
+	}
+
+    if c < 0 || c > maxColumn  {
+        message := fmt.Sprintf("column out of bounds %d > %d", c, maxColumn)
+		return "", []int{ r, c }, errors.New(message)
+    }
+
+	return grid[r][c], []int{r, c}, nil
+}
+
+type Direction int
+
+const (
+	North Direction = iota
+	NorthEast
+	NorthWest
+	East
+	South
+	SouthEast
+	SouthWest
+	West
+)
