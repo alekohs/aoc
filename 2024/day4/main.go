@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	// "strings"
-	"github.com/alexanderkohkoinen/aoc/util"
+	"github.com/alekohs/aoc/util"
 )
 
 func main() {

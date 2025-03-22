@@ -1,4 +1,4 @@
-module github.com/alexanderkohkoinen/aoc
+module github.com/alekohs/aoc
 
 go 1.22.1
 

@@ -2,7 +2,7 @@ package main
 
 import (
     "fmt"
-    "github.com/alexanderkohkoinen/aoc/util"
+    "github.com/alekohs/aoc/util"
     "strconv"
     "strings"
     "sort"

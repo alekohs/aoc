@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/Knetic/govaluate"
-	"github.com/alexanderkohkoinen/aoc/util"
+	"github.com/alekohs/aoc/util"
 	// "slices"
 )
 

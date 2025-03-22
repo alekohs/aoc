@@ -2,7 +2,7 @@ package main
 
 import (
 	"testing"
-	"github.com/alexanderkohkoinen/aoc/util"
+	"github.com/alekohs/aoc/util"
 )
 
 func TestPart1(t *testing.T) {
