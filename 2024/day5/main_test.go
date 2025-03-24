@@ -34,7 +34,7 @@ func TestPart1(t *testing.T) {
     61,13,29
     97,13,75,29,47`
 
-	expected := 18
+	expected := 143
 	result := part1(data)
 
 	if result != expected {
