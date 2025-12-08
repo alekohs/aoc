@@ -47,6 +47,17 @@ func ReadData(path string) []string {
 	})
 }
 
+func ReadDataWithEmpty(path string) []string {
+	return ReadDataWithFunc(path, func(d string) []string {
+		result := []string{}
+		for _, r := range strings.Split(string(d), "\n") {
+			result = append(result, r)
+		}
+
+		return result
+	})
+}
+
 func ExtractIntArray(data []string) [][]int {
 	result := [][]int{}
 
